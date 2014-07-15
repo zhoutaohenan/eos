@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!-- 数据库配置文件-->
+	<db>
+		<oracle_run>false</oracle_run>
+		<sybase_run>false</sybase_run>
+		<sqlserver_run>false</sqlserver_run>
+		<mysql_run>true</mysql_run>
+		<!--数据库编码-->
+		<dbcode>utf-8</dbcode>
+		<!--os编码-->
+		<syscode>utf-8</syscode>
+		<!--oracle数据库sql配置-->
+		<oracle>
+			<!--将短信从SMS_MT表转移到SMS_MT_TASK表-->
+		    <querySql>select * from sms_mt  where rownum &lt; 101  order by PRIORTY desc</querySql>
+		   	<!--不可发送短信直接持久化-->
+		    <errorInsertSql>
+		   		 insert into SMS_SENT (SENT_ID,MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,REPORT_TIME,STATUS,DESCRIPTION,EXTCODE,ORGID,SEND_USERID,SPLIT_MESSAGE) values(SENT_TEMP_ID.NextVal,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorInsertSql>
+			<errorQueueInsert>
+			   insert into SMS_SENT (SENT_ID,MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,EXTCODE,ORGID,SEND_USERID) values(SENT_TEMP_ID.NextVal,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorQueueInsert>
+			<!--响应回来后，持久化已发送短信到临时表-->
+			<insertSql>
+				insert into SMS_SENT_TEMP (SENT_TEMP_ID,MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,EXTCODE,ORGID,SEND_USERID,USER_SIGN) values(SENT_TEMP_ID.NextVal,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSql>
+			<!--持久化MO信息-->
+			<moSql>insert into SMS_MO (MO_ID,SOURCEADDR,CONTENT,CHANNEL,DESTADDR,EXTCODE,ORGID,USERID,MOINDEX) values(MO_ID.NextVal,?,?,?,?,?,?,?,?)</moSql>
+			<!--查询发送失败短信，以待重发-->
+			<failSmsSql>
+				select * from SMS_SENT_TEMP where ISNEED_RESEND=1 and RESEND_STATUS=2 and RESEND_CHANNEL is null and  ((sysdate-SEND_TIME) &lt;(1/1440 *10)) and rownum &lt; 100 
+			</failSmsSql>
+			<!--将临时表数据转到sent表中-->
+			<insertSentSql>
+			   insert into SMS_SENT(SENT_ID,MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,STATUS,DESCRIPTION,REPORT_TIME,EXTCODE,ORGID,SEND_USERID) values(SENT_TEMP_ID.NextVal,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSentSql>
+			<!--查询SMS_SENT_TEMP中符合转移条件的数据-->
+			<queryTempSql>
+				select * from SMS_SENT_TEMP where ((ISNEEDREPORT=0 and ISNEED_RESEND=0) or (ISNEEDREPORT=1 and ISNEED_RESEND=0  and STATUS is not null) or (RESEND_CHANNEL is  null  and  ISNEED_RESEND=1 and RESEND_STATUS!=2) or (RESEND_CHANNEL is not null  and  ISNEED_RESEND!=0) or (ISNEED_RESEND!=0 and ((sysdate-SEND_TIME) &gt;(1/1440 *10)))) and rownum &lt;100
+			</queryTempSql>
+			<!--根据扩展端口，查询用户的扩展端口，及机构端口-->
+			<queryIDSql>
+				select USERID,ORGID from SMS_USER where (ORGPORT||USER_PORT) = ?
+			</queryIDSql>
+		</oracle>
+		<sybase>
+		   <querySql>SET ROWCOUNT 100  select * from SMS_MT  order by PRIORTY desc</querySql>
+		   <moSql>insert into SMS_MO (SOURCEADDR,CONTENT,CHANNEL,DESTADDR,EXTCODE,ORGID,USERID,MOINDEX) values(?,?,?,?,?,?,?,?)</moSql>
+		    <errorInsertSql>
+		   		 insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,REPORT_TIME,STATUS,DESCRIPTION,EXTCODE,ORGID,SEND_USERID,SPLIT_MESSAGE) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorInsertSql>
+			<errorQueueInsert>
+			insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorQueueInsert>
+			<insertSql>
+				insert into SMS_SENT_TEMP (MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,EXTCODE,ORGID,SEND_USERID,USER_SIGN) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSql>
+			<failSmsSql>
+				SET ROWCOUNT 100 select * from SMS_SENT_TEMP where ISNEED_RESEND=1 and RESEND_STATUS=2 and RESEND_CHANNEL ='' and (DATEDIFF(mi,SEND_TIME,getdate()) &lt; 10)
+			</failSmsSql>
+			<!--将临时表数据转到sent表中-->
+			<insertSentSql>
+			   insert into SMS_SENT(MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,STATUS,DESCRIPTION,REPORT_TIME,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSentSql>
+			<!--查询SMS_SENT_TEMP中符合转移条件的数据-->
+			<queryTempSql>
+				 SET ROWCOUNT 100 select * from SMS_SENT_TEMP where ((ISNEEDREPORT=0 and ISNEED_RESEND=0) or (ISNEEDREPORT=1 and ISNEED_RESEND=0  and STATUS!='') or (RESEND_CHANNEL=''  and  ISNEED_RESEND=1 and RESEND_STATUS!=2) or (RESEND_CHANNEL !='' and  ISNEED_RESEND!=0))  or (ISNEED_RESEND!=0 and (DATEDIFF(mi,SEND_TIME,getdate()) &gt; 10))
+			</queryTempSql>
+			<!--根据扩展端口，查询用户的扩展端口，及机构端口-->
+			<queryIDSql>
+				select USERID,ORGID from SMS_USER where (ORGPORT+USER_PORT) = ?
+			</queryIDSql>
+		</sybase>
+		<sqlserver>
+		   <querySql>select top 100 * from SMS_MT  order by PRIORTY desc</querySql>
+		   <moSql>insert into SMS_MO (SOURCEADDR,CONTENT,CHANNEL,DESTADDR,EXTCODE,ORGID,USERID,MOINDEX) values(?,?,?,?,?,?,?,?)</moSql>
+		    <errorInsertSql>
+		   		 insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,REPORT_TIME,STATUS,DESCRIPTION,EXTCODE,ORGID,SEND_USERID,SPLIT_MESSAGE) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorInsertSql>
+			<errorQueueInsert>
+			insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorQueueInsert>
+			<insertSql>
+				insert into SMS_SENT_TEMP (MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,EXTCODE,ORGID,SEND_USERID,USER_SIGN) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSql>
+			<failSmsSql>
+			    select top 100 * from SMS_SENT_TEMP  where ISNEED_RESEND=1 and RESEND_STATUS=2 and RESEND_CHANNEL =''  and (DATEDIFF(mi,SEND_TIME,getdate()) &lt; 10)
+			</failSmsSql>
+			<!--将临时表数据转到sent表中-->
+			<insertSentSql>
+			   insert into SMS_SENT(MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,STATUS,DESCRIPTION,REPORT_TIME,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSentSql>
+			<!--查询SMS_SENT_TEMP中符合转移条件的数据-->
+			
+			<queryTempSql>
+				select top 100 * from SMS_SENT_TEMP where ((ISNEEDREPORT=0 and ISNEED_RESEND=0) or (ISNEEDREPORT=1 and ISNEED_RESEND=0  and STATUS!='') or (RESEND_CHANNEL=''and  ISNEED_RESEND=1 and RESEND_STATUS!=2) or (RESEND_CHANNEL !='' and  ISNEED_RESEND!=0) or (ISNEED_RESEND!=0 and (DATEDIFF(mi,SEND_TIME,getdate()) &gt; 10)))
+			</queryTempSql>
+			<!--根据扩展端口，查询用户的扩展端口，及机构端口-->
+			<queryIDSql>
+				select USERID,ORGID from SMS_USER where isnull(ORGPORT,'')+isnull(USER_PORT,'') = ?
+			</queryIDSql>
+		</sqlserver>
+		<mySql>
+		   <querySql>select * from SMS_MT  order by PRIORTY desc limit 100 </querySql>
+		   <moSql>insert into SMS_MO (SOURCEADDR,CONTENT,CHANNEL,DESTADDR,RECEIVETIME,EXTCODE,ORGID,USERID,MOINDEX) values(?,?,?,?,?,?,?,?,?)</moSql>
+		    <errorInsertSql>
+		   		 insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,SEND_TIME,CREATE_TIME,REPORT_TIME,STATUS,DESCRIPTION,EXTCODE,ORGID,SEND_USERID,SPLIT_MESSAGE) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorInsertSql>
+			<errorQueueInsert>
+			insert into SMS_SENT (MT_ID, SMSID, DESTADDR, ISNEEDREPORT, SEND_FLAG,MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND ,RESEND_STATUS,SEND_RET,CREATE_TIME,SPLIT_MESSAGE,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</errorQueueInsert>
+			<insertSql>
+				insert into SMS_SENT_TEMP (MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,EXTCODE,ORGID,SEND_USERID,USER_SIGN) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSql>
+			<failSmsSql>
+			    select * from SMS_SENT_TEMP where ISNEED_RESEND=1 and RESEND_STATUS=2 and RESEND_CHANNEL='' and (unix_timestamp(now())- unix_timestamp(SEND_TIME) &lt; 60*10) limit 10
+			</failSmsSql>
+			<!--将临时表数据转到sent表中-->
+			<insertSentSql>
+			   insert into SMS_SENT(MT_ID, SMSID, DESTADDR, CREATE_TIME, ISNEEDREPORT, SEND_FLAG, SEND_TIME,CHANNEL, RESEND_CHANNEL, MESSAGE, SPLIT_MESSAGE, PK_TOTAL, PK_NUMBER, ISNEED_RESEND,RESEND_STATUS, MESSAGE_ID,SEND_RET,STATUS,DESCRIPTION,REPORT_TIME,EXTCODE,ORGID,SEND_USERID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+			</insertSentSql>
+			<!--查询SMS_SENT_TEMP中符合转移条件的数据-->
+			<queryTempSql>
+				select * from SMS_SENT_TEMP where ((ISNEEDREPORT=0 and ISNEED_RESEND=0) or (ISNEEDREPORT=1 and ISNEED_RESEND=0  and STATUS!='') or (RESEND_CHANNEL=''  and  ISNEED_RESEND=1 and RESEND_STATUS!=2) or (RESEND_CHANNEL!='' and  ISNEED_RESEND!=0)  or (ISNEED_RESEND!=0 and (unix_timestamp(now())- unix_timestamp(SEND_TIME) &gt; 60*10))) limit 100
+			</queryTempSql>
+			<!--根据扩展端口，查询用户的扩展端口，及机构端口-->
+			<queryIDSql>
+				select USERID,ORGID from SMS_USER where concat(ifnull(orgPort,''),ifnull(extendPort,'')) = ?
+			</queryIDSql>
+		</mySql>
+	</db>		
+		

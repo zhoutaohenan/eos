@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 短信服务配置文件 -->
+<smsconfig>
+	<ismg>
+		<!--为用户管理平台提供的服务端口 -->
+		<listenPort>6536</listenPort>
+		<!--响应队列大小 -->
+		<sentSubmitSize>5000</sentSubmitSize>
+		<!-- 响应等待队列大小设置 -->
+		<respsQueueSize>100000</respsQueueSize>
+		<!-- 状态报告等待队列大小设置 -->
+		<reportsQueueSize>100000</reportsQueueSize>
+		<!--长短信等待时间，单位:分钟 -->
+		<longMoTime>1</longMoTime>
+
+		<!--CMPP2网关配置 新接入号 -->
+		<cmpp2 id="cmpp2_0">
+			<!--通道支持的号段 -->
+			<number>134,135,136,137,138,139,150,151,152,157,158,159,182,147,187,188,189
+			</number>
+			<!--通道是否运行 -->
+			<isRun>false</isRun>
+			<!--此通道发送失败重发所走的通道 -->
+			<reSendChannl></reSendChannl>
+			<!-- 短信网关IP -->
+			<ismgIp>127.0.0.1</ismgIp>
+			<!-- 短信网关端口 -->
+			<ismgPort>7890</ismgPort>
+			<!--企业代码 -->
+			<spId>413711</spId>
+			<!--SP特服号 -->
+			<spCode>10657532595579</spCode>
+			<!--登录短信网关帐号 -->
+			<ismgUserName>413711</ismgUserName>
+			<!--登录短信网关密码 -->
+			<ismgPwd>824824</ismgPwd>
+			<!--网关连接数 -->
+			<connCount>1</connCount>
+			<!-- 网关是否支持长短信 -->
+			<longsmSupport>true</longsmSupport>
+			<!--缺省的业务代码 -->
+			<serviceid>MGD0013939023</serviceid>
+			<!--计费用户类型字段 以下按照CMPP21填写 -->
+			<feeUserType>0</feeUserType>
+			<!--被计费用户的号码 -->
+			<feeTerminalId></feeTerminalId>
+			<!--资费类别 -->
+			<feeType>01</feeType>
+			<!-- 资费代码（以分为单位） -->
+			<feeCode>000000</feeCode>
+			<!-- 短信流控 条/每秒 -->
+			<mtFlux>200</mtFlux>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn>[遨友网]</ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn>[]</ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--滑动窗口大小 默认16 -->
+			<windowSize>1000</windowSize>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+		</cmpp2>
+
+
+		<!--电信 -->
+		<smgp id="smgp_0">
+			<!--通道支持的号段 -->
+			<number>133,153,180,189</number>
+			<!--通道是否运行 -->
+			<isRun>false</isRun>
+			<!--此通道发送失败重发所走的通道 -->
+			<reSendChannl></reSendChannl>
+			<!-- 短信网关IP -->
+			<ismgIp>219.133.59.101</ismgIp>
+			<!-- 短信网关端口 -->
+			<ismgPort>9995</ismgPort>
+			<!--企业代码 -->
+			<spId>12164805</spId>
+			<!--SP特服号 -->
+			<spCode>1065905760228</spCode>
+			<!--登录短信网关帐号 -->
+			<ismgUserName>bwkj0228</ismgUserName>
+			<!--登录短信网关密码 -->
+			<ismgPwd>bwkj0228</ismgPwd>
+			<!--网关连接数 -->
+			<connCount>1</connCount>
+			<!-- 网关是否支持长短信 -->
+			<longsmSupport>true</longsmSupport>
+			<!--缺省的业务代码 -->
+			<serviceid>IMMF</serviceid>
+			<!--计费用户类型字段 以下按照CMPP21填写 -->
+			<feeUserType>0</feeUserType>
+			<!--被计费用户的号码 -->
+			<feeTerminalId></feeTerminalId>
+			<!--资费类别 -->
+			<feeType>01</feeType>
+			<!-- 资费代码（以分为单位） -->
+			<feeCode>000000</feeCode>
+			<!-- 短信流控 条/每秒 -->
+			<mtFlux>15</mtFlux>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn></ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn></ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--滑动窗口大小 默认16 -->
+			<windowSize>100</windowSize>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+		</smgp>
+		<!--联通 -->
+		<sgip id="sgip_0">
+			<!--通道是否运行 -->
+			<isRun>true</isRun>
+			<!--此通道发送失败重发所走的通道 -->
+			<reSendChannl></reSendChannl>
+			<!--通道支持的号段 -->
+			<number>130,131,132,155,156,145,185,186</number>
+			<!-- 网关ip 112.90.176.36 -->
+			<ismgIp>127.0.0.1</ismgIp>
+			<!-- 网关端口号 -->
+			<ismgPort>8801</ismgPort>
+			<!--SP…ID(最大为六位字符) 企业代码01297 -->
+			<spId>20135</spId>
+			<!--SP…CODE 企业特服号SP的接入号码195522 -->
+			<spCode>1065502020840</spCode>
+			<!--登录短信网关帐号gdtkrs -->
+			<ismgUserName>zt</ismgUserName>
+			<!--登录短信网关密码 -->
+			<ismgPwd>123456</ismgPwd>
+			<!--缺省的业务代码 -->
+			<serviceid>0000</serviceid>
+			<!--连接类型 0长连接 1短连接 -->
+			<connectType>1</connectType>
+			<!--需要开启的连接数 默认为1 -->
+			<connCount>1</connCount>
+			<!--服务监听端口 -->
+			<listenPort>8766</listenPort>
+			<!-- 连接闲置时间数（秒），超过该时间，连接关闭,默认是60秒 -->
+			<timeout>60</timeout>
+			<!-- 滑动窗口数，默认是16 -->
+			<windowSize>100</windowSize>
+			<!-- 短信流控 每秒条数 -->
+			<mtFlux>100</mtFlux>
+			<!-- 网关是否支持长短信 -->
+			<longsmSupport>true</longsmSupport>
+			<!-- 节点编号 -->
+			<nodeID>30760201541</nodeID>
+			<!-- 付费号码 -->
+			<chargeNumber>000000000000000000000</chargeNumber>
+			<!--计费类型 -->
+			<feeType>0</feeType>
+			<!--该条短消息的收费值，单位为分 -->
+			<feeValue>0</feeValue>
+			<!--赠送用户的话费，单位为分 -->
+			<givenValue>0</givenValue>
+			<!--代收费标志，0：应收；1：实收 -->
+			<agentFlag>1</agentFlag>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn></ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn></ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+		</sgip>
+		<http id="http_0">
+			<!--是否启动 -->
+			<isRun>false</isRun>
+			<!--通道支持的号段 -->
+			<number>150</number>
+			<!--网关url -->
+			<url>http://www.ydqxt.com:8080/sendsms.asp</url>
+			<!--网关帐号字段名 -->
+			<nameKey>username</nameKey>
+			<!--帐号密码字段名 -->
+			<passwordKey>password</passwordKey>
+			<!--网关帐号 -->
+			<name>zdkj</name>
+			<!--帐号密码 -->
+			<password>123456</password>
+			<!--短信内容字段名 -->
+			<messageKey>message</messageKey>
+			<!--号码字段名 -->
+			<mobileKey>mobile</mobileKey>
+			<!--发送速度 秒 -->
+			<flux>20</flux>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn></ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn></ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--长短信拆分字数 -->
+			<longsmsLength>70</longsmsLength>
+			<!--滑动窗口大小 默认16 -->
+			<windowSize>16</windowSize>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+			<!--状态报告地址 -->
+			<reportURL>http://www.ydqxt.com:8180/getStateXml.asp</reportURL>
+			<!--MO地址 -->
+			<moURL>http://www.ydqxt.com:8180/getRecSmsXml.asp</moURL>
+			<protocolName>com.surge.engine.protocol.sms.http.HttpProtocol
+			</protocolName>
+		</http>
+		<http id="http_1">
+			<!--是否启动 -->
+			<isRun>false</isRun>
+			<!--通道支持的号段 -->
+			<number>150</number>
+			<!--网关url -->
+			<url>http://121.37.62.141:1080/pushsms9999/SendMsg0762.asp</url>
+			<!--网关帐号字段名 -->
+			<nameKey>username</nameKey>
+			<!--帐号密码字段名 -->
+			<passwordKey>userpwd</passwordKey>
+			<!--网关帐号 -->
+			<name>zdkj</name>
+			<!--帐号密码 -->
+			<password>123456</password>
+			<!--短信内容字段名 -->
+			<messageKey>msg</messageKey>
+			<!--号码字段名 -->
+			<mobileKey>mobilelist</mobileKey>
+			<!--发送速度 秒 -->
+			<flux>20</flux>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn></ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn></ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--长短信拆分字数 -->
+			<longsmsLength>70</longsmsLength>
+			<!--滑动窗口大小 默认16 -->
+			<windowSize>16</windowSize>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+			<!--状态报告地址 -->
+			<reportURL>http://121.37.62.141:1080/pushsms9999/getreport.asp
+			</reportURL>
+			<!--MO地址 -->
+			<moURL></moURL>
+			<protocolName>com.surge.engine.protocol.sms.http.HttpProtocol01
+			</protocolName>
+		</http>
+		<http id="浙江电信01">
+			<!--是否启动 -->
+			<isRun>true</isRun>
+			<!--通道支持的号段 -->
+			<number>189</number>
+			<!--网关url -->
+			<url>http://115.236.100.89:8080/smp.entrport.deploy/smApi/submit.form
+			</url>
+			<!--网关帐号字段名 -->
+			<nameKey>accountId</nameKey>
+			<!--帐号密码字段名 -->
+			<passwordKey>sourcePhoneNo</passwordKey>
+			<!--网关帐号 -->
+			<name>00001318</name>
+			<!--帐号密码 -->
+			<password>1065905732001614</password>
+			<!--短信内容字段名 -->
+			<messageKey>content</messageKey>
+			<!--号码字段名 -->
+			<mobileKey>targetPhoneNo</mobileKey>
+			<!--发送速度 秒 -->
+			<flux>20</flux>
+			<!--是否每条都需要签名 -->
+			<isSmsSign>false</isSmsSign>
+			<!--网关中文短信签名 -->
+			<ismgSignCn></ismgSignCn>
+			<!--网关英文短信签名 -->
+			<ismgSignEn></ismgSignEn>
+			<!--一条中文短信长度 -->
+			<smsLengthCn>70</smsLengthCn>
+			<!--一条英文短信长度 -->
+			<smsLengthEn>140</smsLengthEn>
+			<!--长短信拆分字数 -->
+			<longsmsLength>70</longsmsLength>
+			<!--滑动窗口大小 默认16 -->
+			<windowSize>16</windowSize>
+			<!--是否需要状态报告 需要:1 ; 不需要:0 -->
+			<isNeedReport>1</isNeedReport>
+			<!--状态报告地址 -->
+			<reportURL>http://115.236.100.89:8080/smp.entrport.deploy/feedback/00001318.form
+			</reportURL>
+			<!--MO地址 -->
+			<moURL></moURL>
+			<protocolName>com.surge.engine.protocol.sms.http.HttpProtocol_smgp01
+			</protocolName>
+		</http>
+	</ismg>
+</smsconfig>

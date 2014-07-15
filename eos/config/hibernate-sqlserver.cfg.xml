@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+        <property name="dialect">org.hibernate.dialect.SQLServerDialect</property>
+        <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver </property>
+        <property name="connection.url">jdbc:sqlserver://10.0.11.186:1433;DatabaseName=qxw
+        </property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+        <property name="show_sql">false</property>
+        <property name="use_sql_comments">false</property>
+		
+		<!-- Use the C3P0 connection pool. -->
+		<property name="c3p0.min_size">6</property>
+		<property name="c3p0.max_size">11</property>
+		<property name="c3p0.timeout">1200</property>
+		<property name="hibernate.c3p0.automaticTestTable">KeepConnection</property>
+		<property name="hibernate.c3p0.max_statements">100</property>
+		<property name="hibernate.c3p0.idle_test_period">120</property>
+		<!--定义在从数据库获取新连接失败后重复尝试的次数。 --> 
+		<property name="acquireRetryAttempts">2</property> 
+		  <!-- 每次都验证连接是否可用 --> 
+ 		<property name="hibernate.c3p0.validate">false</property> 
+ 		 <property name="hibernate.c3p0.acquireRetryDelay">100</property> 
+         <property name="hibernate.c3p0.breakAfterAcquireFailure">false</property> 
+ 		
+
+        <!-- Use EHCache -->
+        <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+        <property name="cache.use_query_cache">true</property>
+        <property name="cache.use_minimal_puts">false</property>
+        <property name="max_fetch_depth">3</property>
+
+    </session-factory>
+
+</hibernate-configuration>
