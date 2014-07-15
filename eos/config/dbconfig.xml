@@ -4,7 +4,7 @@
 		<oracle_run>false</oracle_run>
 		<sybase_run>false</sybase_run>
 		<sqlserver_run>false</sqlserver_run>
-		<mysql_run>true</mysql_run>
+		<mysql_run>false</mysql_run>
 		<!--数据库编码-->
 		<dbcode>utf-8</dbcode>
 		<!--os编码-->
